@@ -21,20 +21,18 @@ blueprint:
   After the <Partymode> has been switched on, it is automatically deactivated again after the time period <Duration for Partymode>.
 
   
+  ** Version 1.1, 08.11.2024
+     by nyphis
+     Remove `target_bt` input field
+  
   ** Version 1.0, 28.09.2023
+     by LvS21
+     Initial commit
 
 '
   domain: automation
   #source_url:
   input:
-    target_bt2:
-      name: Better Thermostat - Entity
-      description: Which Better Thermostat is to be controlled (climate, only Better Thermostat devices can be selected here)
-      selector:
-        entity:
-          filter:
-          - integration: better_thermostat
-
     target_bt:
       name: Better Thermostat - Entity
       description: Which Better Thermostat is to be controlled (climate, only Better Thermostat devices can be selected here)
