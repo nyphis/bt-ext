@@ -20,13 +20,23 @@ blueprint:
   
   After the <Partymode> has been switched on, it is automatically deactivated again after the time period <Duration for Partymode>.
 
+
+  ** Version 2.0, 14.11.2024
+     by nyphis
+     
+     Add optional input field `Target temperature entity`.
+     If set, the away temperature is set to the value of this entity.
+
   
   ** Version 1.1, 08.11.2024
      by nyphis
+
      Remove `target_bt2` input field
+
   
   ** Version 1.0, 28.09.2023
      by LvS21
+
      Initial commit
 
 '
@@ -53,6 +63,17 @@ blueprint:
           min: 5
           max: 35
           unit_of_measurement: °C
+
+    target_temperature_entity:
+      name: Target temperature entity
+      description: >-
+        Optional: Select the entity (number) that provides the temperature to be set in case of absence or outside the schedule.
+        If set `Target temperature` will be ignored
+      selector:
+        entity:
+          filter:
+            - domain: number
+      default: 
 
     schedule_for_bt_on:
       name: Schedule
@@ -114,6 +135,9 @@ trigger:
     for: !input partymode_duration
     id: DeactivatePartyMode
 
+variables:
+  target_temperature_entity: !input target_temperature_entity
+
 condition: []
 
 action:
@@ -147,5 +171,10 @@ action:
     else:
       - service: better_thermostat.set_temp_target_temperature
         data:
-          temperature: !input target_temperature
+          temperature: >
+            {% if not is_state(target_temperature_entity, 'None') %}
+              {{ states(target_temperature_entity) }}
+            {% else %}
+              !input target_temperature
+            {% endif %}
         target: !input target_bt
